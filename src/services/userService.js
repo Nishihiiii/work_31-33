@@ -1,12 +1,12 @@
-import {
-  getAllUsers as getAllUsersModel,
-  findUserById,
-} from "../models/user.model.js";
+import { //начало блока импорта функций из другого файла
+  getAllUsers as getAllUsersModel, // импорт функции получения всех пользователей с переименованием, чтобы избежать конфликта имен в текущем файле
+  findUserById, //импорт функции поиска пользователя по его уникальному идентификатору
+} from "../models/user.model.js"; //указание пути к файлу модели, из которого берутся функции для работы с базой данных
 
-export async function getAllUsers() {
-  return getAllUsersModel();
+export async function getAllUsers() { //объявление и экспорт асинхронной функции-обертки для получения списка всех пользователей
+  return getAllUsersModel(); //вызов функции из модели и возврат полученного списка всех записей
 }
 
-export async function getUserById(id) {
-  return findUserById(id);
+export async function getUserById(id) { //объявление асинхронной функции для поиска конкретного пользователя по переданному id
+  return findUserById(id); //вызов функции модели с передачей идентификатора и возврат данных пользователя или null
 }
