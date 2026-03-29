@@ -1,16 +1,16 @@
-const errorHandler = (err, req, res, next) => {
-  if (err.isOperational) {
-    return res.status(err.statusCode).json({
-      status: "error",
-      message: err.message,
+const errorHandler = (err, req, res, next) => { //глобальный обработчик ошибок для Express
+  if (err.isOperational) { //проверяем, является ли ошибка ожидаемой если да отправляем клиенту статус и сообщение из ошибки, если это операционная ошибка, отправляем клиенту тот статус который заложен в ошибке и её сообщение
+    return res.status(err.statusCode).json({ 
+      status: "error", //указываем, что это ошибка
+      message: err.message, //передаём понятное пользователю описание проблемы
     });
   }
 
-  console.error("Необработанная ошибка:", err);
-  res.status(500).json({
+  console.error("Необработанная ошибка:", err); //если ошибка неоперационная логируем её полностью в консоль для отладки
+  res.status(500).json({ //отправляем клиенту общий статус 500 и нейтральное сообщение без технических деталей
     status: "error",
     message: "Что-то пошло не так. Пожалуйста, попробуйте позже.",
   });
 };
 
-export default errorHandler;
+export default errorHandler; //экспортируем обработчик по умолчанию, чтобы подключить его в основном приложении
