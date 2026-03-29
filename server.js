@@ -1,18 +1,18 @@
-import "dotenv/config";
+import "dotenv/config"; //автоматическая загрузка переменных окружения
 
-import app from "./src/app.js";
-import config from "./src/config.js";
-import db from "./src/db/db.js";
+import app from "./src/app.js"; //импорт настроенного экземпляра приложения express из папки исходников
+import config from "./src/config.js"; //импорт объекта с конфигурационными данными
+import db from "./src/db/db.js"; //импорт модуля для подключения или работы с базой данных
 
-const startServer = async () => {
+const startServer = async () => { //объявление асинхронной стрелочной функции для запуска сервера
   try {
-    app.listen(config.port, () => {
-      console.log(`Сервер запущен на http://localhost:${config.port}`);
-      console.log(`Документация доступна на http://localhost:${config.port}/api/docs`);
+    app.listen(config.port, () => { //запуск сервера на порту, указанном в конфигурации, и создание функции обратного вызова при успехе
+      console.log(`Сервер запущен на http://localhost:${config.port}`); //вывод сообщения в консоль с адресом запущенного сервера
+      console.log(`Документация доступна на http://localhost:${config.port}/api/docs`); //вывод в консоль ссылки на интерактивную документацию swagger
     });
   } catch (err) {
-    console.error("Не удалось запустить сервер:", err);
+    console.error("Не удалось запустить сервер:", err); //вывод сообщения об ошибке и её описания в консоль
   }
 };
 
-startServer();
+startServer(); //вызов функции для фактического запуска сервера
