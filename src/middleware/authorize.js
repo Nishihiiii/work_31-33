@@ -1,14 +1,14 @@
-import AppError from "../utils/appError.js";
+import AppError from "../utils/appError.js"; //импорт кастомного класса для удобного формирования ошибок
 
-const authorize = (...roles) => {
-  return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      return next(
-        new AppError("У вас нет прав для доступа к этому ресурсу", 403),
+const authorize = (...roles) => { //создание функции, которая принимает список разрешенных ролей (через spread-оператор)
+  return (req, res, next) => { //возврат функции посредника (middleware), имеющей доступ к объектам запроса и ответа
+    if (!roles.includes(req.user.role)) { //если роль текущего пользователя не входит в список разрешенных
+      return next( //прерывание выполнения и передача ошибки в следующий обработчик
+        new AppError("У вас нет прав для доступа к этому ресурсу", 403), //создание ошибки доступа
       );
     }
-    next();
+    next(); //если роль совпала, разрешаем переход к следующей функции или контроллеру
   };
 };
 
-export default authorize;
+export default authorize; //экспорт функции для её использования при защите маршрутов (routes)
