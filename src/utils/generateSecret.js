@@ -1,11 +1,11 @@
-import crypto from "crypto";
+import crypto from "crypto"; //импортируется стандартный модуль Node.js для работы с генерацией криптографически безопасных случайных данных
 
-export default function generateSecret(name) {
-  if (process.env.NODE_ENV === "production") {
-    throw new Error(`${name} должен быть установлен в переменных окружения в режиме production`);
+export default function generateSecret(name) { //объявляем экспортируемую функцию, которая принимает название параметра окружения
+  if (process.env.NODE_ENV === "production") {  //проверяем запущен ли сервер в production-режиме
+    throw new Error(`${name} должен быть установлен в переменных окружения в режиме production`); //если да принудительно прерываем выполнение, чтобы избежать использования ненадёжного ключа
   }
-  const generated = crypto.randomBytes(64).toString("hex");
-  console.warn(`[config] ${name} не установлен, используем сгенерированный секрет (только для разработки):`, generated);
+  const generated = crypto.randomBytes(64).toString("hex"); //генерируем 64 криптографически безопасных случайных байта
+  console.warn(`[config] ${name} не установлен, используем сгенерированный секрет (только для разработки):`, generated); //возвращаем сгенерированную строку для использования в других частях приложения
   return generated;
 }
 
