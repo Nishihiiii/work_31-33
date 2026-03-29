@@ -1,0 +1,215 @@
+openapi: 3.0.0
+info:
+  title: Auth API
+  description: API для аутентификации и управления пользователями
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Локальный сервер
+
+paths:
+  /api/auth/register:
+    post:
+      summary: Регистрация пользователя
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  minLength: 8
+                  example: password123
+      responses:
+        "201":
+          description: Пользователь успешно зарегистрирован
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  userId:
+                    type: integer
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /api/auth/login:
+    post:
+      summary: Вход в систему
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  minLength: 8
+                  example: password123
+      responses:
+        "200":
+          description: Успешный вход
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/auth/refresh:
+    post:
+      summary: Обновление токенов
+      tags:
+        - Auth
+      responses:
+        "200":
+          description: Токены обновлены
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/auth/logout:
+    post:
+      summary: Выход из системы
+      tags:
+        - Auth
+      responses:
+        "200":
+          description: Выход выполнен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/users:
+    get:
+      summary: Получить всех пользователей
+      tags:
+        - Пользователи
+      responses:
+        "200":
+          description: Список пользователей
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /api/users/{id}:
+    get:
+      summary: Получить пользователя по ID
+      tags:
+        - Пользователи
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        "200":
+          description: Пользователь найден
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        role:
+          type: string
+          enum:
+            - user
+            - admin
+
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+
+  responses:
+    BadRequest:
+      description: Неверный запрос
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Unauthorized:
+      description: Не авторизован
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Forbidden:
+      description: Доступ запрещён
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: Не найдено
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
